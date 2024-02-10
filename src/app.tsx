@@ -3,11 +3,36 @@ import { NoteCard } from "./components/note-card";
 import { NewNoteCard } from "./components/new-note-card";
 import { useState } from "react";
 
+interface Note {
+  id: string;
+  date: Date;
+  content: string;
+}
+
 export function App() {
-  const [notes, setNotes] = useState([
-    { id: 1, date: new Date(), content: "Hello, world!" },
-    { id: 2, date: new Date(), content: "Nota 2" },
-  ]);
+  const [notes, setNotes] = useState<Note[]>(() => {
+    const notesOnStorage = localStorage.getItem('notes');
+
+    if (notesOnStorage) {
+      JSON.parse(notesOnStorage)
+    }
+
+    return []
+  });
+
+  function onNoteCreated(content: string) {
+    const newNote = {
+      id: crypto.randomUUID(),
+      date: new Date(),
+      content,
+    };
+
+    const notesArr = [newNote, ...notes];
+
+    setNotes(notesArr);
+
+    localStorage.setItem('notes', JSON.stringify(notesArr))
+  }
 
   return (
     <div className="mx-auto max-w-6xl my-12 space-y-6">
@@ -28,10 +53,10 @@ export function App() {
           <span className="text-sm font-medium text-slate-200">Add note</span>
           <p className="text-sm leading-6 text-slate-400">Record a note with audio and it will be converted to text automatically</p>
         </div> */}
-        <NewNoteCard />
+        <NewNoteCard onNoteCreated={onNoteCreated} />
 
         {notes.map((note: { date: Date; content: string }) => {
-          return <NoteCard note={note} />;
+          return <NoteCard note={note} key={note.id} />;
         })}
       </div>
     </div>
