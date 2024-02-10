@@ -1,9 +1,14 @@
 import logo from "./assets/logo-nlw.svg";
 import { NoteCard } from "./components/note-card";
 import { NewNoteCard } from "./components/new-note-card";
-
+import { useState } from "react";
 
 export function App() {
+  const [notes, setNotes] = useState([
+    { id: 1, date: new Date(), content: "Hello, world!" },
+    { id: 2, date: new Date(), content: "Nota 2" },
+  ]);
+
   return (
     <div className="mx-auto max-w-6xl my-12 space-y-6">
       <img src={logo} alt="logo" />
@@ -24,26 +29,10 @@ export function App() {
           <p className="text-sm leading-6 text-slate-400">Record a note with audio and it will be converted to text automatically</p>
         </div> */}
         <NewNoteCard />
-        <NoteCard
-          note={{
-            date: new Date(),
-            content: "Hello, world",
-          }}
-        />
 
-<NoteCard
-          note={{
-            date: new Date(),
-            content: "Hello, world",
-          }}
-        />
-
-<NoteCard
-          note={{
-            date: new Date(),
-            content: "Hello, world",
-          }}
-        />
+        {notes.map((note: { date: Date; content: string }) => {
+          return <NoteCard note={note} />;
+        })}
       </div>
     </div>
   );
