@@ -7,6 +7,8 @@ interface NewNoteCardProps {
   onNoteCreated: (content: string) => void;
 }
 
+let speechRecognition: SpeechRecognition | null = null;
+
 export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
   const [shouldShowOnboarding, setShouldShowOnboarding] = useState(true);
   const [content, setContent] = useState("");
@@ -38,23 +40,44 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
   }
 
   function handleStartRecording() {
-    setIsRecording(true);
+    const isSpeechRecognitionAPIavailable =
+      "SpeechRecognition" in window || "webkitSpeechRecognition" in window;
 
-    const isSpeechRecognitionAPIavailable = 'SpeechRecognition' in window 
-    || 'webkitSpeechRecognition' in window
-
-    if(!isSpeechRecognitionAPIavailable) {
-      alert('Function not supported by browser')
-      return ;
+    if (!isSpeechRecognitionAPIavailable) {
+      alert("Function not supported by the browser");
+      return;
     }
 
-    const speechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition
+    setIsRecording(true);
+    setShouldShowOnboarding(false);
 
+    const speechRecognitionAPI =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    speechRecognition = new speechRecognitionAPI();
+
+    speechRecognition.lang = "pt-BR";
+    speechRecognition.continuous = true;
+    speechRecognition.maxAlternatives = 1;
+    speechRecognition.interimResults = true;
+
+    speechRecognition.onresult = (event) => {
+      const transcription = Array.from(event.results).reduce((text, result) => {
+        return text.concat(result[0].transcript);
+      }, "");
+
+      setContent(transcription);
+    };
+
+    speechRecognition.start();
   }
 
   function handleStopRecording() {
     setIsRecording(false);
   }
+
+  if (speechRecognition !== null) {
+    speechRecognition.stop();
 
   return (
     <Dialog.Root>
@@ -111,21 +134,21 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
               )}
             </div>
             {isRecording ? (
-            <button
-              type="button"
-              onClick={handleStopRecording}
-              className="w-full flex items-center justify-center gap-2 bg-slate-900 py-4 text-center text-sm text-slate-300 outline-none font-medium hover:text-slate-100"
-            >
-              <div className="size-3 rounded-full bg-red-500 animate-pulse" />
-              Recording... (click to interrupt)
-            </button>
+              <button
+                type="button"
+                onClick={handleStopRecording}
+                className="w-full flex items-center justify-center gap-2 bg-slate-900 py-4 text-center text-sm text-slate-300 outline-none font-medium hover:text-slate-100"
+              >
+                <div className="size-3 rounded-full bg-red-500 animate-pulse" />
+                Recording... (click to interrupt)
+              </button>
             ) : (
-            <button
-              type="submit"
-              className="w-full bg-lime-400 py-4 text-center text-sm text-lime-950 outline-none font-medium hover:bg-lime-500"
-            >
-              Salvar nota
-            </button>
+              <button
+                type="submit"
+                className="w-full bg-lime-400 py-4 text-center text-sm text-lime-950 outline-none font-medium hover:bg-lime-500"
+              >
+                Salvar nota
+              </button>
             )}
             {/* <button
               type="submit"
