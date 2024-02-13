@@ -54,7 +54,7 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
     const speechRecognitionAPI =
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
-    speechRecognition = new speechRecognitionAPI();
+speechRecognition = new speechRecognitionAPI();
 
     speechRecognition.lang = "pt-BR";
     speechRecognition.continuous = true;
@@ -74,10 +74,13 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
 
   function handleStopRecording() {
     setIsRecording(false);
-  }
-
+    
   if (speechRecognition !== null) {
     speechRecognition.stop();
+  }
+  
+  }
+
 
   return (
     <Dialog.Root>
