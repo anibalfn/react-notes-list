@@ -25,9 +25,13 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
   function handleSaveNote(event: FormEvent) {
     event.preventDefault();
 
-    onNoteCreated(content)
-    setContent('')
-    setShouldShowOnboarding(true)
+    if (content === "") {
+      return;
+    }
+
+    onNoteCreated(content);
+    setContent('');
+    setShouldShowOnboarding(true);
 
     toast.success("Note created successfully");
   }
@@ -66,6 +70,7 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
                   </button>{" "}
                   em áudio ou se preferir{" "}
                   <button
+                    type="button"
                     onClick={handleStartEditor}
                     className="font-medium text-lime-400 hover:underline"
                   >
