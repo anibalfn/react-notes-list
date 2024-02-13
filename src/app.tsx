@@ -7,6 +7,7 @@ interface Note {
   id: string;
   date: Date;
   content: string;
+  onNoteDeleted: (id: string) => void;
 }
 
 export function App() {
@@ -32,6 +33,15 @@ export function App() {
     localStorage.setItem("notes", JSON.stringify(notesArr));
 
     
+  }
+
+  function onNoteDeleted(id: string) {
+    const notesArr = notes.filter(note =>{
+      return note.id !== id
+    })
+
+    setNotes(notesArr)
+    localStorage.setItem("notes", JSON.stringify(notesArr));
   }
 
   function handleSearch(event: ChangeEvent<HTMLInputElement>) {
@@ -60,12 +70,12 @@ export function App() {
 
       <div className="h-px bg-slate-700" />
 
-      <div className="grid grid-cols-3 gap-6 auto-rows-[250px]">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[250px]">
         <NewNoteCard onNoteCreated={onNoteCreated} />
 
         {filteredNotes.map(
           (note: { id: string; date: Date; content: string }) => {
-            return <NoteCard key={note.id} note={note} />;
+            return <NoteCard key={note.id} note={note} onNoteDeleted={onNoteDeleted} />;
           }
         )}
       </div>

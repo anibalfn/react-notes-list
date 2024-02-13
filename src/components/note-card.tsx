@@ -10,7 +10,7 @@ interface NoteCardProps {
   };
 }
 
-export function NoteCard({ note }: NoteCardProps) {
+export function NoteCard({ note, onNoteDeleted }: NoteCardProps) {
   return (
     <Dialog.Root>
       <Dialog.Trigger className="rounded-md text-left bg-slate-800 flex flex-col p-5 gap-3 overflow-hidden relative hover:ring-2 hover:ring-slate-600 focus-visible:ring-2 focus-visible:ring-lime-400 outline-none">
@@ -38,6 +38,7 @@ export function NoteCard({ note }: NoteCardProps) {
           </div>
 
           <button
+            onClick={() => onNoteDeleted(note.id)}
             type="button"
             className="w-full bg-slate-800 py-4 text-center text-small text-slate-300 outline-none font-medium group"
           >
