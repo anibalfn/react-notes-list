@@ -29,8 +29,8 @@ Utiliza a funcionalidade de reconhecimento de voz para transformar áudio em tex
 
 ## Como Iniciar 🚀
 
-1. Clone o repositório: `git clone https://github.com/seu-usuario/nome-do-repositorio.git`
-2. Navegue até o diretório: `cd nome-do-repositorio`
+1. Clone o repositório: `git clone https://github.com/anibalfn/react-notes-list.git`
+2. Navegue até o diretório: `cd react-notes-list`
 3. Instale as dependências: `npm install`
 4. Inicie o aplicativo: `npm run dev`
 5. Acesse o aplicativo em: [http://localhost:3000](http://localhost:3000)
